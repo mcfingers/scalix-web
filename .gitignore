@@ -1,0 +1,15 @@
+# Dependencias
+node_modules/
+
+# Salida de build (regenerable con `npm run build`)
+build/
+
+# Artefactos de verificación (regenerables con scripts/verify*.mjs)
+shots/
+
+# Estado local de la herramienta / basura del sistema
+.opencode/
+__pycache__/
+*.log
+.DS_Store
+Thumbs.db
