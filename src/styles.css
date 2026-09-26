@@ -1,0 +1,267 @@
+@import "tailwindcss";
+
+@source "../index.html";
+@source "../assets/js/*.js";
+
+/* ============================================================
+   Scalix Design Tokens — per DESIGN.md (overrides MASTER.md)
+   ============================================================ */
+@theme {
+  --color-brand: #470dfa;
+  --color-brand-dark: #3a0bc9;
+  --color-brand-light: #6b35ff;
+  --color-plum: #4e1f6e;
+  --color-deep: #3e3e75;
+  --color-teal: #45a9a9;
+  --color-mint: #98e8de;
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-card: 0 10px 30px -12px rgba(15, 23, 42, 0.15);
+  --shadow-float: 0 20px 45px -15px rgba(15, 23, 42, 0.25);
+
+  --animate-rise: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-pop: pop 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(32px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-white font-sans text-slate-800 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-balance;
+  }
+
+  /* All headings: tight tracking (utility classes like tracking-wider still win).
+     h3 excluded: card/step titles keep normal tracking. */
+  h1,
+  h2,
+  h4,
+  h5,
+  h6 {
+    letter-spacing: -2px;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand;
+  }
+
+  ::selection {
+    @apply bg-brand text-white;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-200 bg-brand text-white hover:bg-brand-dark;
+  }
+
+  .btn-outline-light {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-200 border border-white/30 text-white hover:border-white/70 hover:bg-white/10;
+  }
+
+  .btn-outline {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-200 border border-slate-300 text-slate-800 hover:border-brand hover:text-brand;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand;
+  }
+
+  .section {
+    @apply py-20 sm:py-24;
+  }
+
+  .section-title {
+    @apply text-3xl font-bold leading-tight text-slate-900 sm:text-4xl lg:text-5xl;
+  }
+
+  .section-lead {
+    @apply mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg;
+  }
+
+  .card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-card;
+  }
+
+  .stat-chip {
+    @apply inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white backdrop-blur lg:px-2.5;
+  }
+
+  .nav-link {
+    @apply relative text-sm font-medium text-slate-600 transition-colors duration-200 hover:text-brand;
+  }
+
+  /* ---------- Proceso: vertical tabs ---------- */
+  .process-tab {
+    @apply relative flex w-full cursor-pointer items-center gap-4 overflow-hidden rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-left transition-colors duration-300;
+    --tab-duration: 5s;
+  }
+
+  .process-tab:hover {
+    @apply border-white/30 bg-white/10;
+  }
+
+  .process-tab[aria-selected="true"] {
+    @apply border-mint/50 bg-white/10;
+  }
+
+  .tab-step {
+    @apply font-display text-sm font-bold text-mint;
+  }
+
+  .tab-title {
+    @apply font-display text-lg font-bold text-white/70 transition-colors duration-300;
+  }
+
+  .process-tab[aria-selected="true"] .tab-title {
+    @apply text-white;
+  }
+
+  .tab-progress {
+    @apply absolute inset-x-0 bottom-0 h-0.5 origin-left bg-mint;
+    transform: scaleX(0);
+  }
+
+  .process-tab[aria-selected="true"] .tab-progress {
+    animation: tab-progress var(--tab-duration) linear forwards;
+  }
+
+  .process-tab.is-paused .tab-progress,
+  [data-process].is-paused .process-tab .tab-progress {
+    animation-play-state: paused;
+  }
+
+  .process-panel {
+    grid-area: 1 / 1;
+    @apply rounded-2xl border border-white/10 bg-white/5 p-7 opacity-0 backdrop-blur sm:p-9;
+    visibility: hidden;
+    transform: translateY(14px);
+    transition:
+      opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.45s;
+  }
+
+  .process-panel.is-active {
+    @apply opacity-100;
+    visibility: visible;
+    transform: translateY(0);
+    transition:
+      opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0s;
+  }
+}
+
+@keyframes tab-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ---------- Hero background video ----------
+   Fades the loop in on load; reduced-motion zeroes the duration so it
+   snaps straight to its final opacity (main.js keeps it paused). */
+@keyframes hero-video-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.85;
+  }
+}
+
+.hero-video {
+  animation: hero-video-fade 1.4s ease-out 0.2s both;
+}
+
+/* Scroll reveal — only when JS + motion allowed */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Staggered entrance for children once their .reveal block is visible.
+   Longhands on purpose: the `animation` shorthand would reset the
+   [animation-delay:…] utilities that create the stagger. */
+.reveal.is-visible .anim-up {
+  animation-name: rise;
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+
+.reveal.is-visible .anim-pop {
+  animation-name: pop;
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
+  }
+}
