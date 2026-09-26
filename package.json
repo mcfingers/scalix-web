@@ -8,7 +8,9 @@
     "dev": "node scripts/dev.mjs",
     "dev:css": "tailwindcss -i ./src/styles.css -o ./assets/css/styles.css --watch",
     "serve": "node scripts/serve.mjs",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "verify:mobile": "node scripts/verify-mobile.mjs",
+    "verify:build": "node scripts/verify-build.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.0",

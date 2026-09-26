@@ -15,7 +15,9 @@ npm run build      # compila CSS + genera build/ listo para subir
 npm run dev        # servidor local + CSS en watch (lo que usarás normalmente)
 npm run serve      # solo servidor local, sin watch
 npm run dev:css    # solo watch de Tailwind
-npm run verify     # auditoría en Chrome (overflow, imágenes, consola, interacciones)
+npm run verify        # auditoría en Chrome (overflow, imágenes, consola, interacciones)
+npm run verify:mobile # auditoría móvil: barras fixed a 375, viewport, swipe de la tabla
+npm run verify:build  # auditoría de la carpeta build/ (17 comprobaciones)
 ```
 
 ## Ver el sitio
@@ -53,7 +55,8 @@ build/
 Todo usa rutas relativas: sube el **contenido** de `build/` a cualquier hosting/carpeta
 pública tal cual. Lo único externo son las tipografías de Google Fonts (CDN).
 Para revisarlo en local antes de subir: `SITE_ROOT=build npm run serve` → http://127.0.0.1:8080/.
-Auditoría de la carpeta compilada: `node scripts/verify-build.mjs`.
+Auditoría de la carpeta compilada: `npm run verify:build` (y `BASE=http://127.0.0.1:8084/ npm run verify:mobile`
+con el servidor de build sirviendo, para la auditoría móvil sobre el build).
 
 ## Estructura
 
@@ -67,6 +70,7 @@ assets/img/             # fotografías descargadas localmente (Unsplash, alt en 
 assets/video/           # loop de fondo del hero (Pexels · licencia libre · 720p + 360p)
 favicon.svg / .ico      # favicon: la flecha del logo (assets en el raíz: favicon-*.png, apple-touch-icon.png)
 scripts/verify.mjs      # auditoría: overflow, imágenes, errores de consola, interacciones
+scripts/verify-mobile.mjs # auditoría móvil 375px: barras fixed, viewport estable, swipe de la tabla
 scripts/capture.mjs     # capturas por sección en shots/
 design-system/scalix/   # design system generado por la skill ui-ux-pro-max (MASTER.md)
 shots/                  # capturas de verificación
@@ -101,6 +105,8 @@ El hero lleva un vídeo de fondo (`assets/video/`) mezclado con los degradados d
 - Texto alternativo en todas las imágenes, acordeón FAQ con `aria-expanded`
 - Navegación por teclado, `:focus-visible`, `prefers-reduced-motion`
 - Sin desbordamiento horizontal en 375 / 768 / 1024 / 1440 px
+- Regresión móvil (`npm run verify:mobile`): el layout viewport no se expande al saltar de
+  sección, así que header y barra fija se quedan siempre a 375 px (tabla con `contain-paint`)
 
 ## Licencia
 

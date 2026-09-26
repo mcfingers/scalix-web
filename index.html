@@ -444,7 +444,9 @@
         </div>
 
         <div class="reveal mx-auto mt-12 max-w-5xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-card">
-          <div class="overflow-x-auto">
+          <!-- contain-paint: la tabla desborda en móvil; sin él, Chromium (Android) puede
+               ampliar el layout viewport al saltar a la sección y las barras fixed se anchuran. -->
+          <div class="overflow-x-auto contain-paint">
             <table class="w-full min-w-[640px] border-collapse text-left text-sm">
               <caption class="sr-only">Comparativa de prestaciones incluidas en los planes Esencial (49€), Crecimiento (82€) y Pro (99€) de Scalix</caption>
               <thead>

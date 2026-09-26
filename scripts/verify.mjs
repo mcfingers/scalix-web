@@ -91,5 +91,23 @@ const menuTest = await mob.evaluate(() => {
   return { open, expanded, closedAfterNav };
 });
 
-console.log(JSON.stringify({ layout, mobLayout, faqState, menuTest, errors, failed }, null, 2));
+// Regresión: al saltar a una sección con tabla ancha, Chromium móvil puede ampliar el
+// layout viewport (innerWidth → 601) y las barras fixed se anchuran. fix: contain-paint.
+await mob.evaluate(() => {
+  document.documentElement.style.scrollBehavior = "auto";
+  window.scrollTo(0, document.getElementById("comparativa").offsetTop);
+});
+await new Promise((r) => setTimeout(r, 700));
+const mobJump = await mob.evaluate(() => ({
+  iw: innerWidth,
+  headerW: Math.round(document.querySelector("#header").getBoundingClientRect().width),
+  barW: Math.round(document.querySelector("body > div.fixed.bottom-0").getBoundingClientRect().width),
+  tableSwipeable: (() => {
+    const s = document.querySelector("#comparativa .overflow-x-auto");
+    return s.scrollWidth > s.clientWidth + 100;
+  })(),
+}));
+mobJump.ok = mobJump.iw === 375 && mobJump.headerW === 375 && mobJump.barW === 375 && mobJump.tableSwipeable;
+
+console.log(JSON.stringify({ layout, mobLayout, faqState, menuTest, mobJump, errors, failed }, null, 2));
 await browser.close();
